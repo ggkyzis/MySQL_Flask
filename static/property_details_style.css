@@ -1,0 +1,214 @@
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    background: url('property_background.jpg') center center/cover no-repeat fixed;
+}
+
+header {
+    background-color: #333;
+    color: white;
+    padding: 1em;
+    display: flex;
+    text-align: center;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+}
+
+.company-logo {
+    width: 60px;
+    height: auto;
+    margin-right: 10px;
+    border-radius: 50%;
+}
+
+h1 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+h3 {
+    margin: 0;
+    font-size: 2.5rem;
+    font-weight: bold;
+    text-align: center;
+    background-color: #3498db;
+}
+
+h2 {
+    background-color: #3498db; /* Choose a background color */
+    color: #fff; /* Text color */
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+main h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+nav {
+    background-color: #333;
+    padding: 0.2em;
+    text-align: center;
+    border-radius: 2.5px;
+}
+
+nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    background-color: #555;
+}
+
+nav ul li {
+    margin: 0;
+    padding: 1rem;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: background-color 0.3s ease;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+}
+
+nav ul li a span {
+    margin-right: 0.2rem;
+}
+
+nav ul li a:hover {
+    background-color: #777;
+}
+
+a {
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: #777;
+}
+
+main {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.property-details-section {
+    text-align: center;
+}
+
+.property-details img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.property-details {
+    margin-top: 20px;
+}
+
+.property-details p {
+    margin: 10px 0;
+    line-height: 1.5;
+}
+
+.property-details .details-heading {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.property-details .property-feature {
+    display: flex;
+    justify-content: space-between;
+    margin: 10px 0;
+}
+
+.property-details .property-feature span {
+    font-weight: bold;
+    color: #555;
+}
+
+footer {
+    text-align: center;
+    background-color: #555;
+    color: white;
+    padding: 1rem;
+}
+/* Add these styles to your existing CSS */
+
+.property-details img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.property-details {
+    margin-top: 20px;
+    text-align: left;
+}
+
+.property-details h3 {
+    font-size: 1.5rem;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.property-details p {
+    margin: 10px 0;
+    line-height: 1.5;
+}
+
+.property-features {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.property-feature {
+    width: 48%; /* Adjust the width as needed, leaving some space for margins */
+    margin-bottom: 20px; /* Add some space between features */
+    box-sizing: border-box; /* Include padding and border in the width calculation */
+    background-color: #f0f0f0; /* Add a background color for better separation */
+    padding: 10px; /* Add padding for better spacing within each feature */
+    display: flex; /* Use flexbox for alignment */
+    align-items: center; /* Center the inner elements horizontally */
+}
+
+.property-feature span {
+    font-weight: bold;
+}
+
+.property-feature p {
+    margin: 5px 0; /* Adjust the margin as needed */
+}

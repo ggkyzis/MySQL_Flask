@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='property_details_style.css') }}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <title>ThesSpitiDB App - Properties</title>
+</head>
+<body>
+    <header>
+        <div class="logo-container">
+            <img class="company-logo" src="{{ url_for('static', filename='thesspitidb_logo.jpg') }}" alt="Company Logo">
+            <h1>ThesSpitiDB App</h1>
+        </div>
+        <nav>
+            <ul>
+                <li><span class="material-symbols-outlined">home</span><a href="/">Homepage</a></li>
+                <li><span class="material-symbols-outlined">travel_explore</span><a href="{{ url_for('property') }}">Properties</a></li>
+                <li><span class="material-symbols-outlined">group</span><a href="{{ url_for('manager') }}">Property Managers</a></li>
+                <li><span class="material-symbols-outlined">engineering</span><a href="{{ url_for('service_provider') }}">Service Providers</a></li>
+            </ul>
+        </nav>         
+    </header>
+    <main>
+        <section class="property-details-section">
+            <div class="property-details">
+                <h3>Property Details</h3>
+                <img src="{{ url_for('static', filename= 'property_images/' + property_data['Property_Image']) }}" alt="Property Image">
+                <div class="property-features">
+                    {% if property_data["Purpose"] %}
+                        <div class="property-feature">
+                            <span>Purpose</span>
+                            <p>{{ property_data["Purpose"] }}</p>
+                        </div>
+                    {% endif %}
+                    {% if property_data["Area_Name"] %}
+                        <div class="property-feature">
+                            <span>Area Name</span>
+                            <p>{{ property_data["Area_Name"] }}</p>
+                        </div>
+                    {% endif %}
+                    {% if property_data["Square_Meters"] %}
+                        <div class="property-feature">
+                            <span>Square Meters</span>
+                            <p>{{ property_data["Square_Meters"] }}</p>
+                        </div>
+                    {% endif %}
+                    {% if property_data["Municipality"] %}
+                        <div class="property-feature">
+                            <span>Municipality</span>
+                            <p>{{ property_data["Municipality"] }}</p>
+                        </div>
+                    {% endif %}
+                    {% if property_data["Cost"] %}
+                        <div class="property-feature">
+                            <span>Cost</span>
+                            <p>{{ property_data["Cost"] }}</p>
+                        </div>
+                    {% endif %}
+                    {% if property_data["Property_Value"] %}
+                        <div class="property-feature">
+                            <span>Property Value</span>
+                            <p>{{ property_data["Property_Value"] }}</p>
+                        </div>
+                    {% endif %}
+                    {% if property_data["Green Index"] %}
+                        <div class="property-feature">
+                            <span>Green Index</span>
+                            <p>{{ property_data["Green Index"] }}</p>
+                        </div>
+                    {% endif %}
+                    {% if property_data["Publish_Date"] %}
+                        <div class="property-feature">
+                            <span>Publish Date</span>
+                            <p>{{ property_data["Publish_Date"] }}</p>
+                        </div>
+                    {% endif %}
+                    {% if property_data["Address"] %}
+                        <div class="property-feature">
+                            <span>Address</span>
+                            <p>{{ property_data["Address"] }}</p>
+                        </div>
+                    {% endif %}
+                    {% if property_data["Postal_Code"] %}
+                    <div class="property-feature">
+                        <span>Postal Code</span>
+                        <p>{{ property_data["Postal_Code"] }}</p>
+                    </div>
+                    {% endif %}
+                    {% if property_data["Description"] %}
+                        <div class="property-feature">
+                            <span>Description</span>
+                            <p>{{ property_data["Description"] }}</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </section>             
+    </main>
+    <footer>
+        <p>&copy; 2024 ThesspitiDB</p>
+    </footer>
+</body>
+</html>

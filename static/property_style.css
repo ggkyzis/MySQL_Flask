@@ -1,0 +1,241 @@
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    background: url('property_background.jpg') center center/cover no-repeat fixed;
+}
+
+header {
+    background-color: #333;
+    color: white;
+    padding: 1em;
+    display: flex;
+    text-align: center;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+}
+
+.company-logo {
+    width: 60px;
+    height: auto;
+    margin-right: 10px;
+    border-radius: 50%;
+}
+
+h1 {
+    margin: 0; /* Remove default margin for h1 */
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+h2 {
+    background-color: #3498db; /* Choose a background color */
+    color: #fff; /* Text color */
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+main h2 {
+    text-align: center;
+    margin-bottom: 20px; /* Adjust the margin as needed */
+}
+
+nav {
+    background-color: #333;
+    padding: 0.2em;
+    text-align: center;
+    border-radius: 2.5px; /* Add rounded corners */
+}
+
+nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    background-color: #555;
+}
+
+nav ul li {
+    margin: 0;
+    padding: 1rem;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: background-color 0.3s ease;
+    border-radius: 5px;
+    display: flex; /* Use flex to align symbols and text horizontally */
+    align-items: center; /* Align items vertically in the center */
+}
+
+nav ul li a span {
+    margin-right: 0.2rem; /* Adjust the margin as needed to separate symbol and text */
+}
+
+nav ul li a:hover {
+    background-color: #777;
+}
+a {
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: #777;
+}
+
+main {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.property-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    background-color: #ecf0f1;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+}
+
+.property-card {
+    width: 300px;
+    height: 240px; /* Add a fixed height for all property cards */
+    margin: 20px 10px;
+    padding: 15px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    background-color: #7c7a7a;
+    text-decoration-color: #ccc;
+    transition: transform 0.3s ease-in-out;
+    overflow: hidden; /* Ensure content doesn't overflow */
+    position: relative; /* Set position to relative for absolute positioning */
+}
+
+.property-card:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1; /* Place the overlay above the content */
+}
+
+.property-card:hover {
+    transform: scale(1.05);
+}
+
+.property-card img {
+    width: 100%;
+    height: 150px;
+    border-radius: 8px;
+    z-index: 0; /* Ensure the image is behind the overlay */
+}
+
+.property-details {
+    margin-top: 15px;
+    text-align: center;
+    position: relative;
+    z-index: 2; /* Ensure property details are above the overlay */
+    color: #141414; /* Adjust text color */
+    justify-content: center; /* Vertically center the content */
+}
+
+.property-details p {
+    margin: 0;
+}
+
+.property-details p:first-child {
+    font-weight: bold; /* Make the first paragraph bold */
+}
+
+.property-card:before,
+.property-details {
+    transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out; /* Add transition effect */
+}
+
+.property-card:hover .property-card:before {
+    background: linear-gradient(to bottom, rgba(0,0,0,0.5), rgba(0,0,0,0.9)); /* Darken the overlay on hover */
+}
+
+.property-card:hover .property-details {
+    color: #fff; /* Change text color on hover */
+}
+
+form {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+    margin-right: 10px;
+    align-items: center;
+}
+
+label {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+select,
+input {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+.button-row {
+    display: flex;
+    justify-content: space-between;
+    margin-right: 10px;
+}
+
+button {
+    padding: 8px 15px;
+    background-color: #333;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-right: 10px; /* Increased margin between the buttons */
+}
+
+button:hover {
+    background-color: #555;
+}
+
+footer {
+    text-align: center;
+    padding: 1em;
+    background-color: #333;
+    color: white;
+    margin-top: 20px;
+}

@@ -1,0 +1,169 @@
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    background: url('background.jpg') center center/cover no-repeat fixed;
+}
+
+header {
+    background-color: #333;
+    color: white;
+    padding: 1em;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+}
+
+.company-logo {
+    width: 45px; /* Adjust the width as needed */
+    height: auto;
+    margin-right: 10px; /* Add margin between logo and company name */
+    border-radius: 50%;
+}
+
+h1 {
+    margin: 0; /* Remove default margin for h1 */
+    font-size: 1.5rem;
+}
+
+nav {
+    background-color: #333;
+    padding: 0.2em;
+    text-align: center;
+    border-radius: 2.5px; /* Add rounded corners */
+}
+nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    background-color: #555;
+}
+
+nav ul li {
+    margin: 0;
+    padding: 1rem;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: background-color 0.3s ease;
+    border-radius: 5px;
+    display: inline-flex; /* Use inline-flex to align symbols and text horizontally */
+    align-items: center; /* Align items vertically in the center */
+}
+
+nav ul li a span {
+    margin-right: 0.2rem; /* Adjust the margin as needed to separate symbol and text */
+}
+
+nav ul li a:hover {
+    background-color: #777;
+}
+
+main {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.image-container {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 2rem;
+}
+
+.image-container a {
+    text-decoration: none;
+    color: #333;
+}
+
+.image-container img {
+    width: 200px;
+    height: auto;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out;
+}
+
+.image-container img:hover {
+    transform: scale(1.1);
+}
+
+footer {
+    text-align: center;
+    background-color: #555;
+    color: white;
+    padding: 1rem;
+}
+
+.app-description {
+    text-align: center;
+    margin-bottom: 2rem;
+    color: #333;
+}
+
+.app-description h2 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+.app-description p {
+    font-size: 1.2rem;
+    line-height: 1.5;
+}
+
+body {
+    font-size: 16px;
+}
+
+h2 {
+    background-color: #3498db; /* Choose a background color */
+    color: #fff; /* Text color */
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+.container {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.button {
+    background-color: #555;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.button:hover {
+    background-color: #777;
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 15px;
+    }
+}

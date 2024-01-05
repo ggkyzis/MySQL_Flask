@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='property_style.css') }}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <title>ThesSpitiDB App - Properties</title>
+</head>
+<body>
+    <header>
+        <div class="logo-container">
+            <img class="company-logo" src="{{ url_for('static', filename='thesspitidb_logo.jpg') }}" alt="Company Logo">
+            <h1>ThesSpitiDB App</h1>
+        </div>
+        <nav>
+            <ul>
+                <li><span class="material-symbols-outlined">home</span><a href="/">Homepage</a></li>
+                <li><span class="material-symbols-outlined">travel_explore</span><a href="{{ url_for('property') }}">Properties</a></li>
+                <li><span class="material-symbols-outlined">group</span><a href="{{ url_for('manager') }}">Property Managers</a></li>
+                <li><span class="material-symbols-outlined">engineering</span><a href="{{ url_for('service_provider') }}">Service Providers</a></li>
+            </ul>
+        </nav>         
+    </header>
+    <main>
+        <h2>Advertisements</h2> 
+        <section class="property-list">
+            <form id="property-search-form" method="POST" action="{{ url_for('property') }}">
+                <div class="form-group">
+                    <label for="type-of-property">Type of Property</label>
+                    <select id="type-of-property" name="type_of_property">
+                        <option value="House">House</option>
+                        <option value="Land">Land</option>
+                        <option value="All">All</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="purpose">Buy or Sale</label>
+                    <select id="purpose" name="purpose">
+                        <option value="Sale">Buy</option>
+                        <option value="Rent">Rent</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="area-name">Area</label>
+                    <input type="text" id="area-name" name="area_name" placeholder="Enter Area Name">
+                </div>
+                <div class="form-group">
+                    <label for="square-meters">Square Meters</label>
+                    <input type="number" id="square-meters" name="square_meters" placeholder="Enter Square Meters">
+                </div>
+                <div class="form-group">
+                    <label for="cost">Approximate Cost</label>
+                    <input type="number" id="cost" name="cost" placeholder="Enter Square Meters">
+                </div>
+                <div class="button-row">
+                    <button type="submit" name="action" value="search">Search</button>
+                    <button type="submit" name="action" value="reset">Reset</button>
+                </div>
+            </form>
+            {% if data %}
+                {% for property in data %}
+                    <a href="{{ url_for('property_details', property_id=property['Property_ID'], purpose=property['Purpose']) }}">
+                        <div class="property-card">
+                            <div class="property-image">
+                                <img src="{{ url_for('static', filename= 'property_images/' + property['Property_Image']) }}" alt="Property Image">
+                            </div>
+                            <div class="property-details">
+                                <p>Purpose: {{ property["Purpose"]}}</p>
+                                <p>Area Name: {{ property["Area_Name"]}}</p>
+                                <p>Square Meters: {{ property["Square_Meters"] }}</p>
+                                <p>Cost: {{ property["Cost"] }}</p>
+                            </div>
+                        </div>
+                    </a>
+                {% endfor %}
+            {% endif %}
+            </div>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2024 ThesspitiDB</p>
+    </footer>
+</body>
+</html>
