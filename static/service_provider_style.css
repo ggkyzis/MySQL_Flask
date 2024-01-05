@@ -196,6 +196,8 @@ button {
     border-radius: 3px;
     cursor: pointer;
     margin-right: 10px; /* Increased margin between the buttons */
+    z-index: 3;
+    position: relative;
 }
 
 button:hover {
@@ -235,7 +237,7 @@ button:hover {
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: 1; /* Place the overlay above the content */
+    z-index: 2; /* Place the overlay above the content */
 }
 
 .services-card:hover {
@@ -258,6 +260,24 @@ button:hover {
     justify-content: center; /* Vertically center the content */
 
 }
+/* Center and style the button */
+.services-card button {
+    display: block;
+    margin: auto;
+    background-color: #3498db; /* Blue color */
+    color: #201d1d; /* White text color */
+    padding: 10px 20px; /* Adjust padding for better appearance */
+    border: none;
+    border-radius: 5px;
+    margin-top: 3px;
+    cursor: pointer;
+}
+
+/* Hover effect */
+.services-card button:hover {
+    background-color: #2980b9; /* Darker blue color on hover */
+    color: #fff;
+}
 
 .services-details p {
     margin: 0;
@@ -279,4 +299,38 @@ button:hover {
 .services-card:hover .services-details {
     color: #fff; /* Change text color on hover */
 }
+
+
+/* Modal styles */
+.modal {
+    display: none; /* Hide the modal by default */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black overlay */
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Ensure the modal appears above other elements */
+}
+
+.modal-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    position: relative;
+    z-index: 1001; /* Ensure the content appears above the overlay */
+}
+
+.close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    font-size: 20px;
+}
+
+/* Add more styles based on your specific modal content */
 
