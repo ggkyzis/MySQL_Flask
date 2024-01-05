@@ -1,10 +1,16 @@
 import mysql.connector
 import json
-from flask import Flask,render_template,request
+from flask import Flask,render_template,request,redirect,url_for
 import os
 import random
+from flask_wtf import FlaskForm
+from flask_wtf.csrf import CSRFProtect
+from wtforms import IntegerField, TextAreaField, SubmitField
+from wtforms.validators import InputRequired, NumberRange
 
 app = Flask(__name__)
+csrf = CSRFProtect(app)
+app.secret_key =  os.urandom(24)
 
 # Read the database configuration from the JSON file
 with open('db_config.json', 'r') as file:
@@ -54,7 +60,7 @@ app.jinja_env.filters['modify_keys'] = modify_keys
 # Function to execute SQL queries
 def execute_query(query, params=None):
     try:
-        with mysql.connector.connect(**db_config) as cnx:
+        with mysql.connector.connect(**db_config, autocommit=True) as cnx:
             with cnx.cursor(dictionary=True) as cursor:
                 if params:
                     cursor.execute(query, params)
@@ -138,7 +144,7 @@ def search_managers(form):
             conditions.append("Fullname LIKE %(manager_name)s")
             params['manager_name'] = manager_name
     elif manager_type == "all":
-        query = """ SELECT Email, Telephone, COALESCE(AVG(user_reviews_manager.Rating), 'No Ratings') AS Average_Rating
+        query = """ SELECT manager.Manager_ID,Email, Telephone, COALESCE(AVG(user_reviews_manager.Rating), 'No Ratings') AS Average_Rating
                     FROM manager"""
         
     query += " LEFT JOIN user_reviews_manager ON manager.Manager_ID = user_reviews_manager.Manager_ID"
@@ -179,7 +185,7 @@ def search_managers(form):
                 manager['Average_Rating'] = "{:.1f}".format(float(manager['Average_Rating']))
             except (ValueError, TypeError):
                 pass 
-    return render_template('manager.html', data=results)
+    return render_template('manager.html', data=results, form=ReviewForm())
 
 
 def search_services(form):
@@ -271,7 +277,7 @@ def reset_properties():
 
 def reset_managers():
     # If it's a GET request or a reset action, display the first 6 properties from the table
-    query_all = '''SELECT Email, Telephone, COALESCE(AVG(user_reviews_manager.Rating), 'No Ratings') AS Average_Rating
+    query_all = '''SELECT manager.Manager_ID,Email, Telephone, COALESCE(AVG(user_reviews_manager.Rating), 'No Ratings') AS Average_Rating
                     FROM manager
                     LEFT JOIN user_reviews_manager ON manager.Manager_ID = user_reviews_manager.Manager_ID
                     GROUP BY manager.Manager_ID; '''
@@ -285,8 +291,7 @@ def reset_managers():
             manager['Average_Rating'] = "{:.1f}".format(float(manager['Average_Rating']))
         except (ValueError, TypeError):
             pass
-
-    return render_template('manager.html', data=result_all)
+    return render_template('manager.html', data=result_all, form=ReviewForm())
 
 def get_property_full_details(property_id,purpose):
     params = {}
@@ -316,6 +321,7 @@ def home():
 # Properties View -> Details etc
 # The use should be able to see the advertisements
 @app.route('/property', methods=['GET', 'POST'])
+@csrf.exempt
 def property():
     if request.method == 'POST':
         # If the request is a POST, the user has submitted a form
@@ -338,6 +344,7 @@ def property_details(property_id, purpose):
     
 # Manager View -> Manager-Owner-Real Estate Agency + Average Rating
 @app.route('/manager', methods=['GET', 'POST'])
+@csrf.exempt
 def manager():
     if request.method == 'POST':
         # If the request is a POST, the user has submitted a form
@@ -354,6 +361,7 @@ def manager():
 
 # Service Provider View -> Service Provider Details + Pricing + Reviews
 @app.route('/service_provider', methods=['GET', 'POST'])
+@csrf.exempt
 def service_provider():
     if request.method == 'POST':
         # If the request is a POST, the user has submitted a form
@@ -367,6 +375,57 @@ def service_provider():
 
     else:
         return reset_services()
+    
+# Define a Flask-WTF form for review submission
+class ReviewForm(FlaskForm):
+    user_id = IntegerField('User ID', validators=[InputRequired()])
+    manager_id = IntegerField('Manager ID', validators=[InputRequired()])
+    rating = IntegerField('Rating', validators=[InputRequired(), NumberRange(min=0, max=10)])
+    comment = TextAreaField('Comment')
+    submit = SubmitField('Submit Review')
+
+# Route for submitting new reviews to managers
+@app.route('/submit_review', methods=['POST'])
+def submit_review():
+    form = ReviewForm(request.form)
+    if form.validate_on_submit():
+        # Extract data from the form
+        user_id = form.user_id.data
+        manager_id = form.manager_id.data
+        rating = form.rating.data
+        comment = form.comment.data
+
+        # Check if a review with the same combination of User_ID and Manager_ID exists
+        existing_review_query = "SELECT * FROM user_reviews_manager WHERE User_ID = %(user_id)s AND Manager_ID = %(manager_id)s;"
+        existing_review_params = {}
+        existing_review_params['user_id'] = user_id
+        existing_review_params['manager_id'] = manager_id
+        existing_review = execute_query(existing_review_query, existing_review_params)
+
+        if existing_review:
+            # If the review exists, update the existing record
+            update_query = "UPDATE user_reviews_manager SET Rating = %(rating)s, Comment = %(comment)s WHERE User_ID = %(user_id)s AND Manager_ID = %(manager_id)s;"
+            update_params = {}
+            update_params['rating'] = rating
+            update_params['comment'] = comment
+            update_params['user_id'] = user_id
+            update_params['manager_id'] = manager_id
+            execute_query(update_query, update_params)
+        else:
+            # If the review does not exist, insert a new record
+            insert_query = "INSERT INTO user_reviews_manager (User_ID, Manager_ID, Rating, Comment) VALUES (%(user_id)s, %(manager_id)s, %(rating)s, %(comment)s);"
+            insert_params = {}
+            insert_params['user_id'] = user_id
+            insert_params['manager_id'] = manager_id
+            insert_params['rating'] = rating
+            insert_params['comment'] = comment
+            execute_query(insert_query, insert_params)
+
+        # Redirect to a different page after submitting the review
+        return reset_managers()
+
+    # Handle form validation errors
+    return render_template('error.html', errors=form.errors)
 
 
 if __name__ == '__main__':
