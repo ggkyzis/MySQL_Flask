@@ -235,7 +235,7 @@ def search_services(form):
         # Assign a random image to each service provider
         service_provider['Provider_Image'] = get_random_provider_image()
 
-    return render_template('service_provider.html', data=results)
+    return render_template('service_provider.html', data=results, form=ReviewForm())
 
 
 def reset_services():
@@ -262,7 +262,7 @@ def reset_services():
     for provider in result_all:
         provider['Provider_Image'] = get_random_provider_image() 
 
-    return render_template('service_provider.html', data=result_all)
+    return render_template('service_provider.html', data=result_all, form=ReviewForm())
 
 def reset_properties():
     # If it's a GET request or a reset action, display the first 6 properties from the table
@@ -423,6 +423,57 @@ def submit_review():
 
         # Redirect to a different page after submitting the review
         return reset_managers()
+
+    # Handle form validation errors
+    return render_template('error.html', errors=form.errors)
+
+# Define a Flask-WTF form for review submission
+class ReviewForm_Service(FlaskForm):
+    user_id = IntegerField('User ID', validators=[InputRequired()])
+    provider_id = IntegerField('Provider ID', validators=[InputRequired()])
+    rating = IntegerField('Rating', validators=[InputRequired(), NumberRange(min=0, max=10)])
+    comment = TextAreaField('Comment')
+    submit = SubmitField('Submit Review')
+
+# Route for submitting new reviews to managers
+@app.route('/submit_provider_review', methods=['POST'])
+def submit_provider_review():
+    form = ReviewForm_Service(request.form)
+    if form.validate_on_submit():
+        # Extract data from the form
+        user_id = form.user_id.data
+        provider_id = form.provider_id.data
+        rating = form.rating.data
+        comment = form.comment.data
+
+        # Check if a review with the same combination of User_ID and Manager_ID exists
+        existing_review_query = "SELECT * FROM user_reviews_service_provider WHERE User_ID = %(user_id)s AND Service_Provider_ID = %(provider_id)s;"
+        existing_review_params = {}
+        existing_review_params['user_id'] = user_id
+        existing_review_params['provider_id'] = provider_id
+        existing_review = execute_query(existing_review_query, existing_review_params)
+
+        if existing_review:
+            # If the review exists, update the existing record
+            update_query = "UPDATE user_reviews_service_provider SET Rating = %(rating)s, Comment = %(comment)s WHERE User_ID = %(user_id)s AND Service_Provider_ID = %(provider_id)s;"
+            update_params = {}
+            update_params['rating'] = rating
+            update_params['comment'] = comment
+            update_params['user_id'] = user_id
+            update_params['provider_id'] = provider_id
+            execute_query(update_query, update_params)
+        else:
+            # If the review does not exist, insert a new record
+            insert_query = "INSERT INTO user_reviews_service_provider (User_ID, Service_Provider_ID, Rating, Comment) VALUES (%(user_id)s, %(provider_id)s, %(rating)s, %(comment)s);"
+            insert_params = {}
+            insert_params['user_id'] = user_id
+            insert_params['provider_id'] = provider_id
+            insert_params['rating'] = rating
+            insert_params['comment'] = comment
+            execute_query(insert_query, insert_params)
+
+        # Redirect to a different page after submitting the review
+        return reset_services()
 
     # Handle form validation errors
     return render_template('error.html', errors=form.errors)
