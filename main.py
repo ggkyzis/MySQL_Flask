@@ -199,7 +199,7 @@ def search_services(form):
 
     query = """
         SELECT
-            s.*,
+            s.Service_Provider_ID, s.Name, s.Address, s.Website, s.Telephone,
             GROUP_CONCAT(DISTINCT p.Type_of_Service) AS Service_Types,
             IFNULL(ROUND(AVG(r.Rating), 1), 'No Rating') AS Average_Rating,
             IFNULL(ROUND(AVG(p.Mean_Price), 2), 'No Price') AS Mean_Price
@@ -220,14 +220,14 @@ def search_services(form):
         conditions.append("p.Type_of_Service LIKE %(service_type)s")
         params['service_type'] = service_type
 
-    if min_rating:
-        conditions.append("COALESCE(AVG(r.Rating), 0) >= %(min_rating)s")
-        params['min_rating'] = min_rating
-
     if conditions:
         query += " WHERE " + " AND ".join(conditions)
 
-    query += " GROUP BY s.Service_Provider_ID"
+    query += " GROUP BY s.Service_Provider_ID, s.Name, s.Address, s.Website, s.Telephone"
+
+    if min_rating:
+        query += " HAVING COALESCE(AVG(r.Rating), 0) >= %(min_rating)s"
+        params['min_rating'] = min_rating
 
     results = execute_query(query, params)
 
