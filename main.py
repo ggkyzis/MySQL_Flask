@@ -1,6 +1,6 @@
 import mysql.connector
 import json
-from flask import Flask,render_template,request,redirect,url_for
+from flask import Flask,render_template,request,redirect,url_for, session
 import os
 import random
 from flask_wtf import FlaskForm
@@ -280,7 +280,8 @@ def reset_managers():
     query_all = '''SELECT manager.Manager_ID,Email, Telephone, COALESCE(AVG(user_reviews_manager.Rating), 'No Ratings') AS Average_Rating
                     FROM manager
                     LEFT JOIN user_reviews_manager ON manager.Manager_ID = user_reviews_manager.Manager_ID
-                    GROUP BY manager.Manager_ID; '''
+                    GROUP BY manager.Manager_ID; 
+                '''
     
     result_all = execute_query(query_all)
 
@@ -478,6 +479,37 @@ def submit_provider_review():
     # Handle form validation errors
     return render_template('error.html', errors=form.errors)
 
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    # if request.method == 'POST':
+    #     # authentication using username and email
+    #     username = request.form['username']
+    #     email = request.form['email']
+
+    #         return redirect(url_for('welcome'))
+    #     else:
+    #         return render_template('login.html', error='Invalid username or password!')
+    return render_template('login.html')
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    # if request.method == 'POST':
+    #     username = request.form['username']
+    #     password = request.form['password']
+    #     confirm_password = request.form['confirm_password']
+    #     if password == confirm_password:
+    #         hashed_password = sha256(password.encode("utf-8")).hexdigest()
+    #         col.insert_one({'_id':uuid.uuid4().hex,'username': username, 'password': hashed_password})
+    #         return redirect(url_for('login'))
+    #     else:
+    #         return render_template('register.html', error='Passwords do not match')
+    return render_template('register.html')
+
+@app.route('/welcome')
+def welcome():
+    # if 'username' in session:
+    #     return render_template('welcome.html', username=session['username'])
+    return redirect(url_for('login'))
 
 if __name__ == '__main__':
     app.run(debug=True)
