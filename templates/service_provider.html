@@ -16,9 +16,10 @@
         </div>
         <nav>
             <ul>
+                <li><a href="{{ url_for('login') }}"><span class="material-symbols-outlined">login</span>Login</a></li>
                 <li><a href="/"><span class="material-symbols-outlined">home</span> Homepage</a></li>
                 <li><a href="{{ url_for('property') }}"><span class="material-symbols-outlined">travel_explore</span> Properties</a></li>
-                <li><a href="{{ url_for('manager') }}"><span class="material-symbols-outlined">group</span>Managers</a></li>
+                <li><a href="{{ url_for('manager') }}"><span class="material-symbols-outlined">group</span> Property Managers</a></li>
                 <li><a href="{{ url_for('service_provider') }}"><span class="material-symbols-outlined">engineering</span> Service Providers</a></li>
             </ul>
         </nav>        
