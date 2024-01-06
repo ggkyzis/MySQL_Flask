@@ -443,7 +443,7 @@ def submit_provider_review():
     form = ReviewForm_Service(request.form)
     if form.validate_on_submit():
         # Extract data from the form
-        user_id = form.user_id.data
+        user_id = form.user_id.data # this is not suppose to happen in a real website but to avoid overcomplicating the assignment with authentication
         provider_id = form.provider_id.data
         rating = form.rating.data
         comment = form.comment.data
