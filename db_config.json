@@ -1,6 +1,6 @@
 {
-    "user": "root",
-    "password": "12042001",
+    "user": "dbadmin",
+    "password": "adminpassword",
     "database": "thesspitidb",
     "host": "127.0.0.1"
 }

@@ -16,6 +16,7 @@
         </div>
         <nav>
             <ul>
+                <li><a href="{{ url_for('login') }}"><span class="material-symbols-outlined">login</span>Login</a></li>
                 <li><a href="/"><span class="material-symbols-outlined">home</span> Homepage</a></li>
                 <li><a href="{{ url_for('property') }}"><span class="material-symbols-outlined">travel_explore</span> Properties</a></li>
                 <li><a href="{{ url_for('manager') }}"><span class="material-symbols-outlined">group</span> Property Managers</a></li>
@@ -25,7 +26,7 @@
     </header>
     <main>
         <section class="app-description">
-            <h2>Welcome to THESSpitiDB App</h2>
+            <h2>Welcome to THESSpitiDB App!</h2>
             <p>
                 ThesSpitiDB is your ultimate destination for discovering exceptional properties, connecting with reliable property managers, 
                 and engaging with top-notch service providers. Explore our platform to find the perfect property, experienced property managers, 
@@ -37,8 +38,5 @@
             <a href="{{ url_for('service_provider') }}"><img src="{{ url_for('static', filename='service_provider.jpg') }}" alt="Service Provider Image"></a>
         </div>
     </main>
-    <footer>
-        <p>&copy; 2024 ThesspitiDB</p>
-    </footer>
 </body>
 </html>

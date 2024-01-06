@@ -1,6 +1,6 @@
 import mysql.connector
 import json
-from flask import Flask,render_template,request,redirect,url_for
+from flask import Flask,render_template,request,redirect,url_for,session
 import os
 import random
 from flask_wtf import FlaskForm
@@ -265,10 +265,11 @@ def reset_services():
     return render_template('service_provider.html', data=result_all, form=ReviewForm())
 
 def reset_properties():
+    print('here')
     # If it's a GET request or a reset action, display the first 6 properties from the table
     query_all = "SELECT * FROM advertisement JOIN property ON advertisement.Property_ID = property.Property_ID"
     result_all = execute_query(query_all)
-
+    print(result_all)
     # Assign a random image to each property
     for property in result_all:
         property['Property_Image'] = get_random_property_image()
@@ -280,7 +281,8 @@ def reset_managers():
     query_all = '''SELECT manager.Manager_ID,Email, Telephone, COALESCE(AVG(user_reviews_manager.Rating), 'No Ratings') AS Average_Rating
                     FROM manager
                     LEFT JOIN user_reviews_manager ON manager.Manager_ID = user_reviews_manager.Manager_ID
-                    GROUP BY manager.Manager_ID; '''
+                    GROUP BY manager.Manager_ID; 
+                '''
     
     result_all = execute_query(query_all)
 
@@ -315,6 +317,7 @@ def get_property_full_details(property_id,purpose):
 
 # Basic Menu of the Web App
 @app.route('/')
+@csrf.exempt
 def home():
     return render_template('layout.html')
 
@@ -332,11 +335,11 @@ def property():
 
         elif action == 'reset':
             return reset_properties()
-
     else:
         return reset_properties()
     
 @app.route('/property/<int:property_id>/<string:purpose>')
+@csrf.exempt
 def property_details(property_id, purpose):
     # Retrieve detailed information about the property using property_id
     # You can fetch the data from the database or any other source
@@ -386,6 +389,7 @@ class ReviewForm(FlaskForm):
 
 # Route for submitting new reviews to managers
 @app.route('/submit_review', methods=['POST'])
+@csrf.exempt
 def submit_review():
     form = ReviewForm(request.form)
     if form.validate_on_submit():
@@ -437,6 +441,7 @@ class ReviewForm_Service(FlaskForm):
 
 # Route for submitting new reviews to managers
 @app.route('/submit_provider_review', methods=['POST'])
+@csrf.exempt
 def submit_provider_review():
     form = ReviewForm_Service(request.form)
     if form.validate_on_submit():
@@ -478,6 +483,86 @@ def submit_provider_review():
     # Handle form validation errors
     return render_template('error.html', errors=form.errors)
 
+'''
+Due to the Initial Design of the Database let's hypothesize that this app would 
+work by authenticating the user through his/her email.
+
+TEST ACCOUNT: (or just create your own :)
+Username: test
+Email: test@gmail.com
+
+'''
+class LoginForm(FlaskForm):
+    username = TextAreaField('Username', validators=[InputRequired()])
+    email = TextAreaField('Email', validators=[InputRequired()])
+    submit = SubmitField('Login')
+
+class RegisterForm(FlaskForm):
+    username = TextAreaField('Username', validators=[InputRequired()])
+    email = TextAreaField('Email', validators=[InputRequired()])
+    email_validation = TextAreaField('Confirm Email', validators=[InputRequired()])
+    telephone = TextAreaField('Phone')
+    submit = SubmitField('Login')
+
+@app.route('/login', methods=['GET', 'POST'])
+@csrf.exempt
+def login():
+    if request.method == 'POST':
+        # authentication using username and email
+        username = request.form['username']
+        email = request.form['email']
+        if username and email:
+            # Check if we can find an account in the database
+            existing_acount_query = "SELECT * FROM `user` WHERE Username = %(username)s AND Email = %(email)s;"
+            existing_acount_params = {}
+            existing_acount_params['username'] = username
+            existing_acount_params['email'] = email
+            existing_acount = execute_query(existing_acount_query, existing_acount_params)
+
+            if existing_acount: # the account exists
+                return render_template('layout.html')
+            else: # the account does not exist
+               return render_template('login.html', error='Invalid username or password!', form=LoginForm()) 
+        else: # empty field
+            return render_template('login.html', error='Invalid username or password!', form=LoginForm())
+    else: # GET Method
+        return render_template('login.html', form=LoginForm())
+
+@app.route('/register', methods=['GET', 'POST'])
+@csrf.exempt
+def register():
+    if request.method == 'POST':
+        username = request.form['username']
+        email = request.form['email']
+        confirm_email = request.form['confirm_email']
+        telephone = request.form['telephone']
+        if username and email and confirm_email:
+            if email == confirm_email:
+                # Since I did not use Auto-Increment in the IDs, I must somehow create them
+                # Determine the next available User_ID
+                get_max_user_id_query = "SELECT MAX(User_ID) FROM `user`;"
+                max_user_id = execute_query(get_max_user_id_query)
+
+                # If max_user_id is None, it means there are no existing records in the table
+                # In that case, you can start with User_ID = 1
+                next_user_id = 1 if max_user_id[0]['MAX(User_ID)'] is None else max_user_id[0]['MAX(User_ID)'] + 1
+
+                # Check if we can find an account in the database
+                acount_query = "INSERT INTO `user` (User_ID, Username, Email, Telephone) VALUES (%(user_id)s, %(username)s, %(email)s, %(telephone)s);"
+                acount_params = {}
+                acount_params['user_id'] = next_user_id
+                acount_params['username'] = username
+                acount_params['email'] = email
+                acount_params['telephone'] = telephone
+                execute_query(acount_query, acount_params)
+
+                return render_template('layout.html')
+            else:
+                return render_template('login.html', error='Emails do not match!', form = LoginForm())
+        else:
+            return render_template('register.html', error='Empty Fields!', form = RegisterForm())
+    else:
+        return render_template('register.html', form = RegisterForm())
 
 if __name__ == '__main__':
     app.run(debug=True)
