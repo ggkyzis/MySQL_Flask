@@ -1,6 +1,6 @@
 import mysql.connector
 import json
-from flask import Flask,render_template,request,redirect,url_for, session
+from flask import Flask,render_template,request,redirect,url_for,session
 import os
 import random
 from flask_wtf import FlaskForm
@@ -265,10 +265,11 @@ def reset_services():
     return render_template('service_provider.html', data=result_all, form=ReviewForm())
 
 def reset_properties():
+    print('here')
     # If it's a GET request or a reset action, display the first 6 properties from the table
     query_all = "SELECT * FROM advertisement JOIN property ON advertisement.Property_ID = property.Property_ID"
     result_all = execute_query(query_all)
-
+    print(result_all)
     # Assign a random image to each property
     for property in result_all:
         property['Property_Image'] = get_random_property_image()
@@ -316,6 +317,7 @@ def get_property_full_details(property_id,purpose):
 
 # Basic Menu of the Web App
 @app.route('/')
+@csrf.exempt
 def home():
     return render_template('layout.html')
 
@@ -333,11 +335,11 @@ def property():
 
         elif action == 'reset':
             return reset_properties()
-
     else:
         return reset_properties()
     
 @app.route('/property/<int:property_id>/<string:purpose>')
+@csrf.exempt
 def property_details(property_id, purpose):
     # Retrieve detailed information about the property using property_id
     # You can fetch the data from the database or any other source
@@ -387,6 +389,7 @@ class ReviewForm(FlaskForm):
 
 # Route for submitting new reviews to managers
 @app.route('/submit_review', methods=['POST'])
+@csrf.exempt
 def submit_review():
     form = ReviewForm(request.form)
     if form.validate_on_submit():
@@ -438,6 +441,7 @@ class ReviewForm_Service(FlaskForm):
 
 # Route for submitting new reviews to managers
 @app.route('/submit_provider_review', methods=['POST'])
+@csrf.exempt
 def submit_provider_review():
     form = ReviewForm_Service(request.form)
     if form.validate_on_submit():
