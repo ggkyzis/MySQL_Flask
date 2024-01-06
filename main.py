@@ -479,37 +479,86 @@ def submit_provider_review():
     # Handle form validation errors
     return render_template('error.html', errors=form.errors)
 
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    # if request.method == 'POST':
-    #     # authentication using username and email
-    #     username = request.form['username']
-    #     email = request.form['email']
+'''
+Due to the Initial Design of the Database let's hypothesize that this app would 
+work by authenticating the user through his/her email.
 
-    #         return redirect(url_for('welcome'))
-    #     else:
-    #         return render_template('login.html', error='Invalid username or password!')
-    return render_template('login.html')
+TEST ACCOUNT: (or just create your own :)
+Username: test
+Email: test@gmail.com
+
+'''
+class LoginForm(FlaskForm):
+    username = TextAreaField('Username', validators=[InputRequired()])
+    email = TextAreaField('Email', validators=[InputRequired()])
+    submit = SubmitField('Login')
+
+class RegisterForm(FlaskForm):
+    username = TextAreaField('Username', validators=[InputRequired()])
+    email = TextAreaField('Email', validators=[InputRequired()])
+    email_validation = TextAreaField('Confirm Email', validators=[InputRequired()])
+    telephone = TextAreaField('Phone')
+    submit = SubmitField('Login')
+
+@app.route('/login', methods=['GET', 'POST'])
+@csrf.exempt
+def login():
+    if request.method == 'POST':
+        # authentication using username and email
+        username = request.form['username']
+        email = request.form['email']
+        if username and email:
+            # Check if we can find an account in the database
+            existing_acount_query = "SELECT * FROM `user` WHERE Username = %(username)s AND Email = %(email)s;"
+            existing_acount_params = {}
+            existing_acount_params['username'] = username
+            existing_acount_params['email'] = email
+            existing_acount = execute_query(existing_acount_query, existing_acount_params)
+
+            if existing_acount: # the account exists
+                return render_template('layout.html')
+            else: # the account does not exist
+               return render_template('login.html', error='Invalid username or password!', form=LoginForm()) 
+        else: # empty field
+            return render_template('login.html', error='Invalid username or password!', form=LoginForm())
+    else: # GET Method
+        return render_template('login.html', form=LoginForm())
 
 @app.route('/register', methods=['GET', 'POST'])
+@csrf.exempt
 def register():
-    # if request.method == 'POST':
-    #     username = request.form['username']
-    #     password = request.form['password']
-    #     confirm_password = request.form['confirm_password']
-    #     if password == confirm_password:
-    #         hashed_password = sha256(password.encode("utf-8")).hexdigest()
-    #         col.insert_one({'_id':uuid.uuid4().hex,'username': username, 'password': hashed_password})
-    #         return redirect(url_for('login'))
-    #     else:
-    #         return render_template('register.html', error='Passwords do not match')
-    return render_template('register.html')
+    if request.method == 'POST':
+        username = request.form['username']
+        email = request.form['email']
+        confirm_email = request.form['confirm_email']
+        telephone = request.form['telephone']
+        if username and email and confirm_email:
+            if email == confirm_email:
+                # Since I did not use Auto-Increment in the IDs, I must somehow create them
+                # Determine the next available User_ID
+                get_max_user_id_query = "SELECT MAX(User_ID) FROM `user`;"
+                max_user_id = execute_query(get_max_user_id_query)
 
-@app.route('/welcome')
-def welcome():
-    # if 'username' in session:
-    #     return render_template('welcome.html', username=session['username'])
-    return redirect(url_for('login'))
+                # If max_user_id is None, it means there are no existing records in the table
+                # In that case, you can start with User_ID = 1
+                next_user_id = 1 if max_user_id[0]['MAX(User_ID)'] is None else max_user_id[0]['MAX(User_ID)'] + 1
+
+                # Check if we can find an account in the database
+                acount_query = "INSERT INTO `user` (User_ID, Username, Email, Telephone) VALUES (%(user_id)s, %(username)s, %(email)s, %(telephone)s);"
+                acount_params = {}
+                acount_params['user_id'] = next_user_id
+                acount_params['username'] = username
+                acount_params['email'] = email
+                acount_params['telephone'] = telephone
+                execute_query(acount_query, acount_params)
+
+                return render_template('layout.html')
+            else:
+                return render_template('login.html', error='Emails do not match!', form = LoginForm())
+        else:
+            return render_template('register.html', error='Empty Fields!', form = RegisterForm())
+    else:
+        return render_template('register.html', form = RegisterForm())
 
 if __name__ == '__main__':
     app.run(debug=True)

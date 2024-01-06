@@ -9,7 +9,8 @@
     <div class="container d-flex justify-content-center align-items-center min-vh-100">
         <div class="card p-4">
             <h1 class="text-center mb-4">Register</h1>
-            <form method="post">
+            <form method="POST">
+                {{ form.hidden_tag() }}
                 <div class="form-group">
                     <label for="username">Username</label>
                     <input type="text" class="form-control" name="username" placeholder="Username" required>
@@ -22,9 +23,13 @@
                     <label for="confirm_email">Confirm Email</label>
                     <input type="email" class="form-control" name="confirm_email" placeholder="Confirm Email" required>
                 </div>
+                <div class="form-group">
+                    <label for="telephone">Phone</label>
+                    <input type="test" class="form-control" name="telephone" placeholder="Phone" required>
+                </div>
                 <button type="submit" class="btn btn-primary btn-block">Register</button>
             </form>
-            <p class="mt-3 text-center">Already have an account? <a href="{{ url_for('login') }}">Login here</a></p>
+            <p class="mt-3 text-center">Already have an account? <a href="{{ url_for('login') }}">Login here!</a></p>
         </div>
     </div>
 </body>
