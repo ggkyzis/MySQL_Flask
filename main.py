@@ -31,7 +31,7 @@ def get_random_provider_image():
     random_image = random.choice(provider_images)
     return random_image
 
-# maybe change the images between agencies and individuals
+
 def get_random_manager_image(randomness = True,is_agency = True):
     # Path to the folder containing property images
     if randomness:
@@ -239,7 +239,7 @@ def search_services(form):
 
 
 def reset_services():
-    # If it's a GET request or a reset action, display the first 6 properties from the table
+    # If it's a GET request or a reset action
     query_all = """
                 SELECT
                     s.*,
@@ -265,11 +265,8 @@ def reset_services():
     return render_template('service_provider.html', data=result_all, form=ReviewForm())
 
 def reset_properties():
-    print('here')
-    # If it's a GET request or a reset action, display the first 6 properties from the table
     query_all = "SELECT * FROM advertisement JOIN property ON advertisement.Property_ID = property.Property_ID"
     result_all = execute_query(query_all)
-    print(result_all)
     # Assign a random image to each property
     for property in result_all:
         property['Property_Image'] = get_random_property_image()
@@ -277,7 +274,7 @@ def reset_properties():
     return render_template('property.html', data=result_all)
 
 def reset_managers():
-    # If it's a GET request or a reset action, display the first 6 properties from the table
+
     query_all = '''SELECT manager.Manager_ID,Email, Telephone, COALESCE(AVG(user_reviews_manager.Rating), 'No Ratings') AS Average_Rating
                     FROM manager
                     LEFT JOIN user_reviews_manager ON manager.Manager_ID = user_reviews_manager.Manager_ID

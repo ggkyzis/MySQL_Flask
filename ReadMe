@@ -1,0 +1,28 @@
+Description:
+This is the fronted of a MySQL Database that was created as an extra assignment for the Aristotle University of Thessaloniki course "Databases".
+It simulates the basic functionalities of a database that has Properties in the city of Thessaloniki.
+
+Current Functionalities:
+- Connection with MySQL Workbench
+- User Login
+- User Register
+- Menu & Navigation
+- Filtering and Reviewing Property Managers
+- Filtering and Reviewing Service Providers
+- Checking and Filtering Properties
+
+How to Run:
+1) Install the environment with the following command:
+conda env create -f environment.yml
+
+2) This app requires the Thesspitidb to have been created using the corresponding SQL script for db creation
+
+3) In the db_config.json file one of the users is specified. To run the app, the users.sql is required. (The files can be found into the folder "sql_scripts.")
+
+4) To run the app, just run the main.py file.
+
+
+Extra Info:
+This app was created using Flask, HTML, CSS and little bit of Javascript.
+The creator has not been involved with front-end :>
+Future updates will be performed.
