@@ -1,6 +1,6 @@
 import mysql.connector
 import json
-from flask import Flask,render_template,request,redirect,url_for,session
+from flask import Flask,render_template,request,redirect,url_for,session, flash
 import os
 import random
 from flask_wtf import FlaskForm
@@ -378,8 +378,6 @@ def service_provider():
     
 # Define a Flask-WTF form for review submission
 class ReviewForm(FlaskForm):
-    user_id = IntegerField('User ID', validators=[InputRequired()])
-    manager_id = IntegerField('Manager ID', validators=[InputRequired()])
     rating = IntegerField('Rating', validators=[InputRequired(), NumberRange(min=0, max=10)])
     comment = TextAreaField('Comment')
     submit = SubmitField('Submit Review')
@@ -391,47 +389,48 @@ def submit_review():
     form = ReviewForm(request.form)
     if form.validate_on_submit():
         # Extract data from the form
-        user_id = form.user_id.data
-        manager_id = form.manager_id.data
+        user_id = session.get('user_id')
+        manager_id = request.form.get('manager_id')
         rating = form.rating.data
         comment = form.comment.data
 
-        # Check if a review with the same combination of User_ID and Manager_ID exists
-        existing_review_query = "SELECT * FROM user_reviews_manager WHERE User_ID = %(user_id)s AND Manager_ID = %(manager_id)s;"
-        existing_review_params = {}
-        existing_review_params['user_id'] = user_id
-        existing_review_params['manager_id'] = manager_id
-        existing_review = execute_query(existing_review_query, existing_review_params)
+        if user_id:
+            # Check if a review with the same combination of User_ID and Manager_ID exists
+            existing_review_query = "SELECT * FROM user_reviews_manager WHERE User_ID = %(user_id)s AND Manager_ID = %(manager_id)s;"
+            existing_review_params = {}
+            existing_review_params['user_id'] = user_id
+            existing_review_params['manager_id'] = manager_id
+            existing_review = execute_query(existing_review_query, existing_review_params)
 
-        if existing_review:
-            # If the review exists, update the existing record
-            update_query = "UPDATE user_reviews_manager SET Rating = %(rating)s, Comment = %(comment)s WHERE User_ID = %(user_id)s AND Manager_ID = %(manager_id)s;"
-            update_params = {}
-            update_params['rating'] = rating
-            update_params['comment'] = comment
-            update_params['user_id'] = user_id
-            update_params['manager_id'] = manager_id
-            execute_query(update_query, update_params)
+            if existing_review:
+                # If the review exists, update the existing record
+                update_query = "UPDATE user_reviews_manager SET Rating = %(rating)s, Comment = %(comment)s WHERE User_ID = %(user_id)s AND Manager_ID = %(manager_id)s;"
+                update_params = {}
+                update_params['rating'] = rating
+                update_params['comment'] = comment
+                update_params['user_id'] = user_id
+                update_params['manager_id'] = manager_id
+                execute_query(update_query, update_params)
+            else:
+                # If the review does not exist, insert a new record
+                insert_query = "INSERT INTO user_reviews_manager (User_ID, Manager_ID, Rating, Comment) VALUES (%(user_id)s, %(manager_id)s, %(rating)s, %(comment)s);"
+                insert_params = {}
+                insert_params['user_id'] = user_id
+                insert_params['manager_id'] = manager_id
+                insert_params['rating'] = rating
+                insert_params['comment'] = comment
+                execute_query(insert_query, insert_params)
+
+            # Redirect to a different page after submitting the review
+            return reset_managers()
         else:
-            # If the review does not exist, insert a new record
-            insert_query = "INSERT INTO user_reviews_manager (User_ID, Manager_ID, Rating, Comment) VALUES (%(user_id)s, %(manager_id)s, %(rating)s, %(comment)s);"
-            insert_params = {}
-            insert_params['user_id'] = user_id
-            insert_params['manager_id'] = manager_id
-            insert_params['rating'] = rating
-            insert_params['comment'] = comment
-            execute_query(insert_query, insert_params)
-
-        # Redirect to a different page after submitting the review
-        return reset_managers()
+            return render_template('login.html', error='Login Required!', form = LoginForm())     
 
     # Handle form validation errors
     return render_template('error.html', errors=form.errors)
 
 # Define a Flask-WTF form for review submission
 class ReviewForm_Service(FlaskForm):
-    user_id = IntegerField('User ID', validators=[InputRequired()])
-    provider_id = IntegerField('Provider ID', validators=[InputRequired()])
     rating = IntegerField('Rating', validators=[InputRequired(), NumberRange(min=0, max=10)])
     comment = TextAreaField('Comment')
     submit = SubmitField('Submit Review')
@@ -443,39 +442,42 @@ def submit_provider_review():
     form = ReviewForm_Service(request.form)
     if form.validate_on_submit():
         # Extract data from the form
-        user_id = form.user_id.data
-        provider_id = form.provider_id.data
+        user_id = session.get('user_id')
+        provider_id = request.form.get('provider_id')
         rating = form.rating.data
         comment = form.comment.data
+        
+        if user_id:
+            # Check if a review with the same combination of User_ID and Manager_ID exists
+            existing_review_query = "SELECT * FROM user_reviews_service_provider WHERE User_ID = %(user_id)s AND Service_Provider_ID = %(provider_id)s;"
+            existing_review_params = {}
+            existing_review_params['user_id'] = user_id
+            existing_review_params['provider_id'] = provider_id
+            existing_review = execute_query(existing_review_query, existing_review_params)
 
-        # Check if a review with the same combination of User_ID and Manager_ID exists
-        existing_review_query = "SELECT * FROM user_reviews_service_provider WHERE User_ID = %(user_id)s AND Service_Provider_ID = %(provider_id)s;"
-        existing_review_params = {}
-        existing_review_params['user_id'] = user_id
-        existing_review_params['provider_id'] = provider_id
-        existing_review = execute_query(existing_review_query, existing_review_params)
+            if existing_review:
+                # If the review exists, update the existing record
+                update_query = "UPDATE user_reviews_service_provider SET Rating = %(rating)s, Comment = %(comment)s WHERE User_ID = %(user_id)s AND Service_Provider_ID = %(provider_id)s;"
+                update_params = {}
+                update_params['rating'] = rating
+                update_params['comment'] = comment
+                update_params['user_id'] = user_id
+                update_params['provider_id'] = provider_id
+                execute_query(update_query, update_params)
+            else:
+                # If the review does not exist, insert a new record
+                insert_query = "INSERT INTO user_reviews_service_provider (User_ID, Service_Provider_ID, Rating, Comment) VALUES (%(user_id)s, %(provider_id)s, %(rating)s, %(comment)s);"
+                insert_params = {}
+                insert_params['user_id'] = user_id
+                insert_params['provider_id'] = provider_id
+                insert_params['rating'] = rating
+                insert_params['comment'] = comment
+                execute_query(insert_query, insert_params)
 
-        if existing_review:
-            # If the review exists, update the existing record
-            update_query = "UPDATE user_reviews_service_provider SET Rating = %(rating)s, Comment = %(comment)s WHERE User_ID = %(user_id)s AND Service_Provider_ID = %(provider_id)s;"
-            update_params = {}
-            update_params['rating'] = rating
-            update_params['comment'] = comment
-            update_params['user_id'] = user_id
-            update_params['provider_id'] = provider_id
-            execute_query(update_query, update_params)
+            # Redirect to a different page after submitting the review
+            return reset_services()
         else:
-            # If the review does not exist, insert a new record
-            insert_query = "INSERT INTO user_reviews_service_provider (User_ID, Service_Provider_ID, Rating, Comment) VALUES (%(user_id)s, %(provider_id)s, %(rating)s, %(comment)s);"
-            insert_params = {}
-            insert_params['user_id'] = user_id
-            insert_params['provider_id'] = provider_id
-            insert_params['rating'] = rating
-            insert_params['comment'] = comment
-            execute_query(insert_query, insert_params)
-
-        # Redirect to a different page after submitting the review
-        return reset_services()
+            return render_template('login.html', error='Login Required!', form = LoginForm())
 
     # Handle form validation errors
     return render_template('error.html', errors=form.errors)
@@ -484,9 +486,7 @@ def submit_provider_review():
 Due to the Initial Design of the Database let's hypothesize that this app would 
 work by authenticating the user through his/her email.
 
-TEST ACCOUNT: (or just create your own :)
-Username: test
-Email: test@gmail.com
+TEST ACCOUNT: (Create your own :)
 
 '''
 class LoginForm(FlaskForm):
@@ -517,6 +517,8 @@ def login():
             existing_acount = execute_query(existing_acount_query, existing_acount_params)
 
             if existing_acount: # the account exists
+                session_user_id  = existing_acount[0]['User_ID'] # we know this will be unique
+                session['user_id'] = session_user_id
                 return render_template('layout.html')
             else: # the account does not exist
                return render_template('login.html', error='Invalid username or password!', form=LoginForm()) 
@@ -551,6 +553,7 @@ def register():
                 acount_params['username'] = username
                 acount_params['email'] = email
                 acount_params['telephone'] = telephone
+                session['user_id'] = next_user_id
                 execute_query(acount_query, acount_params)
 
                 return render_template('layout.html')
