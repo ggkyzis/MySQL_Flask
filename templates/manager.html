@@ -89,16 +89,8 @@
             <form id="reviewForm" method="POST" action="{{ url_for('submit_review') }}">
                 <!-- Include necessary form fields (User_ID, Manager_ID, Rating, Comment) -->
                 {{ form.hidden_tag() }}
-                <div class="modal-form-field">
-                    <label for="user_id">User ID:</label>
-                    <input type="text" id="user_id" name="user_id" required>
-                </div>
 
-
-                <div class="modal-form-field">
-                    <label for="manager_id">Manager ID:</label>
-                    <input type="text" id="manager_id" name="manager_id" required>
-                </div>
+                <input type="hidden" id="manager_id" name="manager_id" value="">
     
                 <div class="modal-form-field">
                     <label for="rating">Rating:</label>
@@ -121,14 +113,16 @@
         
         // Function to open the modal
         function openModal(managerId) {
-            // Set the Manager_ID in the modal form
-            document.getElementById('manager_id').value = managerId;
             
             // For simplicity, let's set dummy values for user_id and rating
             // You should replace these with the actual logic to obtain user_id and rating
-            document.getElementById('user_id').value = 1;  // Replace with your logic to get user_id
+            //document.getElementById('user_id').value = 1;  // Replace with your logic to get user_id
             document.getElementById('rating').value = 5;   // Replace with your logic to get rating
             document.getElementById('comment').value = 'Input your comment here!';
+
+            // Set the Manager_ID in the modal form
+            document.getElementById('manager_id').value = managerId;
+
             // Show the modal
             modal.style.display = 'block';
         }

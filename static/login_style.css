@@ -66,4 +66,5 @@ header {
 /* Add margin to the top of the "Already have an account?" message */
 .mt-3 {
     margin-top: 15px;
+    text-align: center;
 }
