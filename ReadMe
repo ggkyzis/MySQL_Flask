@@ -12,10 +12,10 @@ Current Functionalities:
 - Checking and Filtering Properties
 
 How to Run:
-1) Install the environment with the following command:
+1) Install the environment in a new anaconda environment with the following command:
 conda env create -f environment.yml
 
-2) This app requires the Thesspitidb to have been created using the corresponding SQL script for db creation
+2) This app requires the Thesspitidb to have been created using the corresponding SQL script for db creation.
 
 3) In the db_config.json file one of the users is specified. To run the app, the users.sql is required. (The files can be found into the folder "sql_scripts.")
 
@@ -23,6 +23,7 @@ conda env create -f environment.yml
 
 
 Extra Info:
-This app was created using Flask, HTML, CSS and little bit of Javascript.
-The creator has not been involved with front-end :>
+This app was created using Flask-Python, HTML, CSS and little bit of Javascript.
+The creator had not been involved with front-end previously:>
 Future updates will be performed.
+For any problems please contact: gdgkyzis@ece.auth.gr
