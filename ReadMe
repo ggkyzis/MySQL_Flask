@@ -24,6 +24,4 @@ conda env create -f environment.yml
 
 Extra Info:
 This app was created using Flask-Python, HTML, CSS and little bit of Javascript.
-The creator had not been involved with front-end previously:>
-Future updates will be performed.
-For any problems please contact: gdgkyzis@ece.auth.gr
+The creator had not been involved with front-end previously (and it is not the main scope of the repo):>
